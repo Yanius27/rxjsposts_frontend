@@ -1,9 +1,13 @@
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export default class Comment {
   constructor(data) {
     this.data = data;
     this.#createComment();
+  }
+
+  #formatComment(text) {
+    return text.slice(0, 25) + '...';
   }
 
   #createComment() {
@@ -33,7 +37,7 @@ export default class Comment {
     const contentSpan = document.createElement('span');
     contentSpan.classList.add('contentSpan');
     if (content.length > 15) {
-      content = content.slice(0, 25) + '...';
+      content = this.#formatComment(content);
     }
     contentSpan.textContent = content;
 
@@ -49,8 +53,8 @@ export default class Comment {
   }
 
   #fixDate(created) {
-    const momentDate = moment.unix(created);
-    return momentDate.format('HH:mm DD.MM.YYYY'); 
+    const luxonDate = DateTime.fromMillis(created)
+    return luxonDate.toFormat('HH:mm dd.MM.yyyy'); 
   }
 
   get element() {

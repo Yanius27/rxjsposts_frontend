@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { DateTime }from 'luxon';
 
 export default class Post {
   constructor(data) {
@@ -61,8 +61,8 @@ export default class Post {
   }
 
   #fixDate(created) {
-    const momentDate = moment.unix(created);
-    return momentDate.format('HH:mm DD.MM.YYYY'); 
+    const luxonDate = DateTime.fromMillis(created);
+    return luxonDate.toFormat('HH:mm dd.MM.yyyy'); 
   }
 
   get element() {

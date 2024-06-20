@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, filter, map, pluck, switchMap, exha
 
 export default class App {
   constructor() {
+    this.postsUpdateInterval = 30000;
     this.#createPostStream();
     this.posts = [];
     this.commentsCache = new Map();
@@ -36,7 +37,7 @@ export default class App {
   }
 
   #createPostStream() {
-    const postStream$ = interval(30000)
+    const postStream$ = interval(this.postsUpdateInterval)
       .pipe(
         switchMap(() => this.#ajaxNewPost()),
         pluck('data'),
@@ -89,7 +90,7 @@ export default class App {
       this.#ajaxComments(post.id)
       .pipe(
         pluck('data'),
-        concatMap(comments => from(comments))
+        concatMap(comments => from(comments)),
       )
       .subscribe({
         next: comment => {
